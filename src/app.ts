@@ -1,3 +1,5 @@
+import {Point} from "./services/poi-types";
+
 export class App {
-  public message: string = 'Hello World!';
+
 }

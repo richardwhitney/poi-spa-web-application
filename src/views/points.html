@@ -1,0 +1,21 @@
+<template>
+  <require from="../resources/elements/points-list"></require>
+
+  <div class="ui stackable two column grid">
+    <div class="column">
+      <form submit.trigger="addPoint()" class="ui form stacked segment">
+        <h3 class="ui dividing header">Add a Point</h3>
+        <div class="field">
+          <label>Name</label> <input value.bind="name">
+        </div>
+        <div class="field">
+          <label>Description</label> <input value.bind="description">
+        </div>
+        <button class="ui blue submit button">Add</button>
+      </form>
+    </div>
+    <div class="column">
+      <points-list points.bind="points"></points-list>
+    </div>
+  </div>
+</template>
