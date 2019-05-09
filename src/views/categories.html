@@ -1,0 +1,13 @@
+<template>
+  <require from="../resources/elements/categories-form"></require>
+  <require from="../resources/elements/categories-list"></require>
+
+  <div class="ui stackable two column grid">
+    <div class="column">
+      <categories-form categories.bind="categories"></categories-form>
+    </div>
+    <div class="column">
+      <categories-list categories.bind="categories"></categories-list>
+    </div>
+  </div>
+</template>
