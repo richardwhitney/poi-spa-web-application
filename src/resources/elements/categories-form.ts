@@ -1,10 +1,13 @@
 import { bindable } from 'aurelia-framework';
-import { Category } from "../../services/poi-types";
+import { Point, Category } from "../../services/poi-types";
 
 export class CategoriesForm {
   name: string;
   @bindable
   categories: Category[];
+
+  @bindable
+  points: Point[];
 
   addCategory() {
     const category = {
