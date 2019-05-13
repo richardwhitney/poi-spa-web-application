@@ -11,7 +11,8 @@ export class CategoriesForm {
 
   addCategory() {
     const category = {
-      name: this.name
+      name: this.name,
+      points: []
     };
     this.categories.push(category);
     console.log(category);

@@ -1,6 +1,6 @@
 export interface Category {
   name: string;
-  //points: Point[];
+  points: Point[];
 }
 
 export interface Point {

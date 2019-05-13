@@ -5,7 +5,7 @@
       <label>Category</label>
       <select value.bind="selectedCategory">
         <option model.bind="null">Choose...</option>
-        <option repeat.for="category of categories" model.bind="categor">
+        <option repeat.for="category of categories" model.bind="category">
           ${category.name}
         </option>
       </select>

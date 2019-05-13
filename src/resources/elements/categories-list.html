@@ -1,6 +1,7 @@
 <template>
-  <div class="ui stacked segment">
-    <h3 class="ui dividing header">Categories</h3>
+  <h3 class="ui dividing header">Categories</h3>
+  <section repeat.for="category of categories" class="ui clearing raised segment">
+    <h3 class="ui dividing header">${category.name}</h3>
     <table class="ui celled table segment">
       <thead>
         <tr>
@@ -8,10 +9,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr repeat.for="category of categories">
-          <td>${category.name}</td>
+        <tr repeat.for="point of category.points">
+          <td>${point.name}</td>
         </tr>
       </tbody>
     </table>
-  </div>
+  </section>
 </template>
