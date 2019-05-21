@@ -8,4 +8,9 @@ export interface Point {
   description: string;
 }
 
-
+export interface User {
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string
+}
