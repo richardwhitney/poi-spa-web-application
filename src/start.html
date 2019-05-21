@@ -1,0 +1,12 @@
+<template>
+  <require from="resources/elements/nav-bar.html"></require>
+  <div class="ui content">
+    <nav-bar router.bind="router"></nav-bar>
+    <section class="ui raised segment">
+      <h3 class="ui header">Islands of Ireland</h3>
+    </section>
+    <div class="ui basic segment">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
