@@ -17,7 +17,6 @@ export class PoiService {
     httpClient.configure(http => {
       http.withBaseUrl('http://localhost:3000');
     });
-    this.getUsers();
   }
 
   async getUsers() {
@@ -27,6 +26,13 @@ export class PoiService {
       this.users.set(user.email, user);
       this.usersById.set(user._id, user);
     });
+  }
+
+  async  getCurrentUser() {
+    const response = await this.httpClient.get('/api/users/current');
+    const currentUser = await response.content;
+    console.log('Current user: ' + JSON.stringify(currentUser));
+    return currentUser;
   }
 
   async signup(firstName: string, lastName: string, email: string, password: string) {
@@ -47,8 +53,17 @@ export class PoiService {
   }
 
   async login(email: string, password: string) {
-    const user = this.users.get(email);
-    if (user && (user.password === password)) {
+    const response = await this.httpClient.post('/api/users/authenticate', {
+      email: email,
+      password: password
+    });
+    const status = await response.content;
+    if (status.success) {
+      this.httpClient.configure(configuration => {
+        configuration.withHeader('Authorization', 'bearer ' + status.token);
+      });
+      localStorage.poi = JSON.stringify(response.content);
+      await this.getUsers();
       await this.getPoints();
       await this.getCategories();
       this.changeRouter(PLATFORM.moduleName('app'));
@@ -60,7 +75,23 @@ export class PoiService {
   }
 
   logout() {
+    localStorage.poi = null;
+    this.httpClient.configure(configuration => {
+      configuration.withHeader('Authorization','');
+    });
     this.changeRouter(PLATFORM.moduleName('start'));
+  }
+
+  checkIsAuthenticated() {
+    let authenticated = false;
+    if (localStorage.poi !== 'null') {
+      authenticated = true;
+      this.httpClient.configure(http => {
+        const auth = JSON.parse(localStorage.poi);
+        http.withHeader('Authorization', 'bearer ' + auth.token);
+      });
+      this.changeRouter(PLATFORM.moduleName('app'));
+    }
   }
 
   async getPoints() {
@@ -81,27 +112,31 @@ export class PoiService {
   }
 
   async addPoint(name: string, description: string, category: Category) {
+    const currentUser = await this.getCurrentUser();
     const point = {
       name: name,
-      description: description
+      description: description,
+      addedBy: currentUser
     };
-    //this.points.push(point);
-    //category.points.push(point);
-    console.log('Point added: ' + point);
-    console.log('Category points: ' + category.points);
+    const response = await this.httpClient.post(`/api/categories/${category._id}/points`, point);
+    const newPoint = await response.content;
+    this.points.push(newPoint);
+    category.points.push(newPoint);
+    console.log('Point added: ' + JSON.stringify(point));
+    //console.log('Category points: ' + category.points);
   }
 
   async getCategories() {
     const response = await this.httpClient.get('/api/categories');
     const rawCategories: RawCategory[] = await response.content;
-    console.log('***Points***: ' + this.points);
+    //console.log('Returned Categories: ' + JSON.stringify(rawCategories));
 
     rawCategories.forEach(rawCategory => {
       let pointsArray: any[] =[];
       rawCategory.points.forEach(pointString => {
-        console.log('Point Id: ' + pointString);
+        //console.log('Point Id: ' + pointString);
         let p : Point = this.points.find(point => pointString == point._id);
-        console.log('Point Object: ' + p);
+        //console.log('Point Object: ' + p);
         pointsArray.push(p);
       });
       const category = {
@@ -111,8 +146,8 @@ export class PoiService {
       }
       this.categories.push(category);
     });
-    console.log('Categories:');
-    console.log(this.categories);
+    //console.log('Categories:');
+    //console.log(this.categories);
   }
 
   async addCategory(name: string,) {
@@ -122,7 +157,7 @@ export class PoiService {
     const response = await this.httpClient.post('/api/categories', category);
     const newCategory = await response.content;
     this.categories.push(newCategory);
-    console.log('Added category: ' + category.name);
+    //console.log('Added category: ' + category.name);
   }
 
   changeRouter(module: string) {
