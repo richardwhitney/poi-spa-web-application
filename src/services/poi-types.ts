@@ -1,8 +1,3 @@
-export interface RawCategory {
-  name: string;
-  points: Point[];
-  _id: string;
-}
 
 export interface Category {
   name: string;

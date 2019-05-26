@@ -1,0 +1,17 @@
+<template>
+  <require from="../resources/elements/coordinates"></require>
+  <require from="../resources/elements/poi-map"></require>
+  <form submit.trigger="updatePoint()" class="ui form stacked segment">
+    <h3 class="ui dividing header">Update ${point.name}</h3>
+    <div class="field">
+      <label>Name</label> <input type="text" value.bind="point.name">
+    </div>
+    <div class="field">
+      <label>Description</label> <textarea type="text" value.bind="point.description"></textarea>
+    </div>
+    <coordinates location.two-way="location"></coordinates>
+    <poi-map></poi-map>
+    <button class="ui blue submit button">Update</button>
+  </form>
+
+</template>

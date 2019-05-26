@@ -2,7 +2,7 @@ import { inject, Aurelia } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 import { PLATFORM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { Point, Category, User, RawCategory, RawPoint, Location } from "./poi-types";
+import { Point, Category, User, RawPoint, Location } from "./poi-types";
 import { HttpClient} from "aurelia-http-client";
 import {MapUpdate} from "./messages";
 
@@ -135,7 +135,21 @@ export class PoiService {
     category.points.push(newPoint);
     this.ea.publish(new MapUpdate(newPoint));
     console.log('Point added: ' + JSON.stringify(point));
+    //await this.resetData();
     //console.log('Category points: ' + category.points);
+  }
+
+  async updatePoint(id: string, name: string, description: string, location: Location) {
+    const currentUser = await this.getCurrentUser();
+    const point = {
+      name: name,
+      description: description,
+      addedBy: currentUser,
+      geo: location
+    };
+    const response = await this.httpClient.put(`/api/points/${id}`, point);
+    console.log('Point updated: ' + response.content);
+    await this.router.navigateToRoute('poiDetail', {id: id});
   }
 
   async deletePoint(id) {
@@ -146,25 +160,26 @@ export class PoiService {
 
   async getCategories() {
     const response = await this.httpClient.get('/api/categories');
-    const rawCategories: RawCategory[] = await response.content;
+    const categories: Category[] = await response.content;
     console.log('Returned Categories:');
-    console.log(rawCategories);
+    console.log(categories);
 
-    rawCategories.forEach(rawCategory => {
-      let pointsArray: any[] =[];
-      /*rawCategory.points.forEach(pointString => {
+    this.categories = categories;
+    /*categories.forEach(rawCategory => {
+      //let pointsArray: any[] =[];
+      //rawCategory.points.forEach(pointString => {
         //console.log('Point Id: ' + pointString);
         let p : Point = this.points.find(point => pointString == point._id);
         //console.log('Point Object: ' + p);
         pointsArray.push(p);
-      });*/
+      });//
       const category = {
         name: rawCategory.name,
         points: rawCategory.points,
         _id: rawCategory._id
-      }
+      };
       this.categories.push(category);
-    });
+    });*/
     console.log('Categories:');
     console.log(this.categories);
   }

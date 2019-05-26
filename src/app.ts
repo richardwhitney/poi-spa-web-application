@@ -21,6 +21,12 @@ export class App {
         title: 'POI'
       },
       {
+        route: 'updatepoint/:id',
+        name: 'updatePoint',
+        moduleId: PLATFORM.moduleName('views/update-point'),
+        title: 'Update Point'
+      },
+      {
         route: 'categories',
         name: 'categories',
         moduleId: PLATFORM.moduleName('views/categories'),
