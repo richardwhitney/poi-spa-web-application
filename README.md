@@ -1,4 +1,4 @@
-# `donation-client`
+# `poi-spa-client`
 
 This project is bootstrapped by [aurelia-cli](https://github.com/aurelia/cli).
 
@@ -25,3 +25,6 @@ Run `au build --env prod`.
 Run `au test` (or `au jest`).
 
 To run in watch mode, `au test --watch` or `au jest --watch`.
+
+## Login details
+Email: marge@simpson.com, Password: secret
