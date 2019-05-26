@@ -113,6 +113,13 @@ export class PoiService {
     console.log(this.points);
   }
 
+  async getPoint(id) {
+    const response = await this.httpClient.get(`/api/points/${id}`);
+    const point = await response.content;
+    console.log(JSON.stringify(point));
+    return point;
+  }
+
   async addPoint(name: string, description: string, category: Category, location: Location) {
     const currentUser = await this.getCurrentUser();
     const point = {

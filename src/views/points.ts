@@ -8,7 +8,6 @@ export class Points {
   categories: Category[];
 
   constructor(private ps: PoiService) {
-    console.log('PoiService: ' + ps.points)
     this.points = ps.points;
     this.categories = ps.categories;
   }

@@ -15,6 +15,12 @@ export class App {
         title: 'POI'
       },
       {
+        route: 'poi/:id',
+        name: 'poiDetail',
+        moduleId: PLATFORM.moduleName('views/poidetail'),
+        title: 'POI'
+      },
+      {
         route: 'categories',
         name: 'categories',
         moduleId: PLATFORM.moduleName('views/categories'),
