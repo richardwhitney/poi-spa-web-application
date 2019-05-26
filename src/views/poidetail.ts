@@ -11,6 +11,10 @@ export class Poidetail {
 
   }
 
+  async deletePoint() {
+    this.ps.deletePoint(this.point._id);
+  }
+
   async activate(params) {
     this.point = await this.ps.getPoint(params.id);
   }

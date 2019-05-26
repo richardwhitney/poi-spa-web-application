@@ -1,6 +1,6 @@
 export interface RawCategory {
   name: string;
-  points: string[];
+  points: Point[];
   _id: string;
 }
 

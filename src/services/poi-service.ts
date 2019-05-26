@@ -126,11 +126,11 @@ export class PoiService {
       name: name,
       description: description,
       addedBy: currentUser,
-      location: location
+      geo: location
     };
     const response = await this.httpClient.post(`/api/categories/${category._id}/points`, point);
     const newPoint = await response.content;
-    newPoint.location = point.location;
+    newPoint.geo = point.geo;
     this.points.push(newPoint);
     category.points.push(newPoint);
     this.ea.publish(new MapUpdate(newPoint));
@@ -138,28 +138,35 @@ export class PoiService {
     //console.log('Category points: ' + category.points);
   }
 
+  async deletePoint(id) {
+    const response = await this.httpClient.delete(`/api/points/${id}`);
+    await this.resetData();
+    await this.router.navigateToRoute("POI");
+  }
+
   async getCategories() {
     const response = await this.httpClient.get('/api/categories');
     const rawCategories: RawCategory[] = await response.content;
-    //console.log('Returned Categories: ' + JSON.stringify(rawCategories));
+    console.log('Returned Categories:');
+    console.log(rawCategories);
 
     rawCategories.forEach(rawCategory => {
       let pointsArray: any[] =[];
-      rawCategory.points.forEach(pointString => {
+      /*rawCategory.points.forEach(pointString => {
         //console.log('Point Id: ' + pointString);
         let p : Point = this.points.find(point => pointString == point._id);
         //console.log('Point Object: ' + p);
         pointsArray.push(p);
-      });
+      });*/
       const category = {
         name: rawCategory.name,
-        points: pointsArray,
+        points: rawCategory.points,
         _id: rawCategory._id
       }
       this.categories.push(category);
     });
-    //console.log('Categories:');
-    //console.log(this.categories);
+    console.log('Categories:');
+    console.log(this.categories);
   }
 
   async addCategory(name: string,) {
@@ -176,5 +183,12 @@ export class PoiService {
     this.router.navigate('/', { replace: true, trigger: false });
     this.router.reset();
     this.au.setRoot(PLATFORM.moduleName(module));
+  }
+
+  async resetData() {
+    this.points.length = 0;
+    this.categories.length = 0;
+    await this.getPoints();
+    await this.getCategories();
   }
 }
