@@ -15,6 +15,7 @@ export interface RawPoint {
   description: string;
   imageUrl?: string;
   addedBy: string;
+  geo: Location;
   _id: string;
 
 }
@@ -23,7 +24,13 @@ export interface Point {
   description: string;
   imageUrl?: string;
   addedBy: User;
+  geo?: Location;
   _id: string;
+}
+
+export interface Location {
+  lat: number;
+  lng: number;
 }
 
 export interface User {

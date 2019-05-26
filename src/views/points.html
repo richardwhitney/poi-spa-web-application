@@ -1,10 +1,12 @@
 <template>
   <require from="../resources/elements/points-list"></require>
   <require from="../resources/elements/points-form"></require>
+  <require from="../resources/elements/poi-map"></require>
 
   <div class="ui stackable two column grid">
     <div class="column">
       <points-form categories.bind="categories"></points-form>
+      <poi-map></poi-map>
     </div>
     <div class="column">
       <points-list points.bind="points"></points-list>

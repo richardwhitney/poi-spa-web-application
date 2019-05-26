@@ -2,8 +2,9 @@ import { inject, Aurelia } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 import { PLATFORM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { Point, Category, User, RawCategory, RawPoint } from "./poi-types";
+import { Point, Category, User, RawCategory, RawPoint, Location } from "./poi-types";
 import { HttpClient} from "aurelia-http-client";
+import {MapUpdate} from "./messages";
 
 @inject(HttpClient,EventAggregator, Aurelia, Router)
 export class PoiService {
@@ -103,6 +104,7 @@ export class PoiService {
         description: rawPoint.description,
         imageURL: rawPoint.imageUrl,
         addedBy: this.usersById.get(rawPoint.addedBy),
+        geo: rawPoint.geo,
         _id: rawPoint._id
       };
       this.points.push(point);
@@ -111,17 +113,20 @@ export class PoiService {
     console.log(this.points);
   }
 
-  async addPoint(name: string, description: string, category: Category) {
+  async addPoint(name: string, description: string, category: Category, location: Location) {
     const currentUser = await this.getCurrentUser();
     const point = {
       name: name,
       description: description,
-      addedBy: currentUser
+      addedBy: currentUser,
+      location: location
     };
     const response = await this.httpClient.post(`/api/categories/${category._id}/points`, point);
     const newPoint = await response.content;
+    newPoint.location = point.location;
     this.points.push(newPoint);
     category.points.push(newPoint);
+    this.ea.publish(new MapUpdate(newPoint));
     console.log('Point added: ' + JSON.stringify(point));
     //console.log('Category points: ' + category.points);
   }
